@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask Form Example</title>
+</head>
+<body>
+    <h1>Flask Form 예제</h1>
+
+    <form method="post" action="/tmp">
+        <button>데이터 불러오기</button>
+    </form>
+
+    <!-- 폼을 사용자가 제출할 수 있게 표시 -->
+    <form method="POST">
+        <label for="업종">업종</label>
+        <select name="업종" id="업종">
+            <option value="">업종을 선택해주세요.</option>
+            {% for i, v in 업종_및_업종명.iterrows() %}
+                <option value="{{ v['업종'] }}">{{ v['업종명' ]}}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">제출</button>
+    </form>
+
+    <!-- 사용자로부터 입력받은 후 결과 표시 -->
+    {% if result is not none %}
+        <h2>결과: {{ result }}</h2>
+    {% endif %}
+
+</body>
+</html>
