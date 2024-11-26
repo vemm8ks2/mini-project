@@ -1,5 +1,7 @@
 import pandas as pd
-from flask import Blueprint, render_template, request, current_app
+from flask import Blueprint, render_template, request
+
+from app.data_process.완전_통합본_생성 import 완전_통합본_생성
 
 main = Blueprint('main', __name__)
 
@@ -16,6 +18,16 @@ def post_method():
 
 @main.route('/tmp', methods=['POST'])
 def tmp_method():
-    print('데이터를 불러옵니다.')
+    #통합본_생성("별도")
+    #통합본_생성("연결")
+    #통합본_생성("별도-연결")
+
+    #전체_통합본_생성('별도')
+    #전체_통합본_생성('연결')
+    #전체_통합본_생성('별도-연결')
+
+    #완전_통합본_생성('전체_별도_')
+    #완전_통합본_생성('전체_연결_')
+    완전_통합본_생성('전체_별도-연결_')
 
     return render_template('index.html', 업종_및_업종명=pd.DataFrame())
