@@ -15,6 +15,8 @@ app.config["일"] = today.day
 app.config["루트_경로"] = f"C:/dataset/{app.config["년"]}/{app.config["월"]}"
 app.config["재무제표_종류"] = ["손익계산서", "재무상태표", "현금흐름표"]
 app.config["재무제표_목록"] = {}
+app.config["종목"] = {}
+app.config["종목코드"] = {}
 
 app.register_blueprint(main)
 
