@@ -62,7 +62,12 @@ def tmp1_method():
         app.config["종목코드"][종목["종목코드"].iloc[-1]] = 종목["회사명"].iloc[-1]
 
     종목.loc[:, "재무제표종류"] = 종목["재무제표종류"].str.strip()
-    종목.loc[:, '항목코드'] = 종목['항목코드'].str.strip()
+    종목.loc[:, "항목코드"] = 종목["항목코드"].str.strip()
+
+    종목.loc[종목["항목코드"] == "ifrs_ProfitLoss", "항목코드"] = "ifrs-full_ProfitLoss"
+    종목.loc[종목["항목코드"] == "ifrs_Revenue", "항목코드"] = "ifrs-full_Revenue"
+    종목.loc[종목["재무제표종류"] == "손익계산서, 기능별 분류 - 별도재무제표", "재무제표종류"] = "손익계산서, 기능별 분류 - 별도"
+    종목.loc[종목["재무제표종류"] == "손익계산서, 기능별 분류 - 연결재무제표", "재무제표종류"] = "손익계산서, 기능별 분류 - 연결"
 
     app.config["종목"][회사명] = 종목 # 캐싱
 
@@ -145,25 +150,32 @@ def tmp4_method():
 
     fig = go.Figure()
 
-    fig.add_trace(go.Scatter(
-        x=종목['결산기준일'],
-        y=종목['당기'],
-        mode='lines+markers',
-        name='당기순이익'
-    ))
+    재무제표종류_목록 = 종목["재무제표종류"].unique()
+    항목코드_목록 = 종목["항목코드"].unique()
+
+    for 종류 in 재무제표종류_목록:
+        for 항목코드 in 항목코드_목록:
+            차트화 = 종목[(종목["재무제표종류"] == 종류) & (종목["항목코드"] == 항목코드)]
+
+            fig.add_trace(go.Scatter(
+                x=차트화['결산기준일'],
+                y=차트화['당기'],
+                mode='lines+markers',
+                name=차트화["항목명"].iloc[-1]
+            ))
 
     # 레이아웃 설정
     fig.update_layout(
-        title=f"{회사명} 연도별 당기순이익",
+        title=f"{회사명} 연도별, 항목코드별 비교 차트",
         xaxis_title="연도",
         xaxis=dict(
             tickvals=종목['결산기준일'],
             ticktext=종목['결산기준일'],
         ),
-        yaxis_title="당기순이익",
-        yaxis=dict(
-            tickformat=',.0f',
-        ),
+        #yaxis_title="당기순이익",
+        #yaxis=dict(
+        #    tickformat=',.0f',
+        #),
         template="simple_white"
     )
 

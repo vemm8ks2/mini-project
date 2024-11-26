@@ -9,9 +9,10 @@ Jinja2==3.1.4
 MarkupSafe==3.0.2
 numpy==2.1.3
 openpyxl==3.1.5
-packaging==24.2
+packaging @ file:///C:/b/abs_c3vlh0z4jw/croot/packaging_1720101866539/work
 pandas==2.2.3
 pefile==2023.2.7
+plotly @ file:///C:/b/abs_1014knmz1t/croot/plotly_1726245573566/work
 pyinstaller==6.11.1
 pyinstaller-hooks-contrib==2024.10
 python-dateutil==2.9.0.post0
@@ -19,6 +20,7 @@ pytz==2024.2
 pywin32-ctypes==0.2.3
 setuptools==75.1.0
 six==1.16.0
+tenacity @ file:///C:/b/abs_1749lsqys6/croot/tenacity_1730304400080/work
 tzdata==2024.2
 Werkzeug==3.1.3
 wheel==0.44.0
