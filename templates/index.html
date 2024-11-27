@@ -4,36 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flask Form Example</title>
+    <style>
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            width: 200px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            padding: 8px;
+            margin: 5px 0;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        li.hidden {
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <h1>Flask Form 예제</h1>
 
-    <form method="post" action="/tmp">
-        <button>데이터 불러오기</button>
-    </form>
-
-    <form method="get" action="/tmp1">
+    <form action="/process">
         <input id="stock-number" name="stock-number" />
         <input id="company-name" name="company-name" />
         <button type="submit">제출</button>
     </form>
 
-    <!-- 폼을 사용자가 제출할 수 있게 표시 -->
-    <form method="POST">
-        <label for="업종">업종</label>
-        <select name="업종" id="업종">
-            <option value="">업종을 선택해주세요.</option>
-            {% for i, v in 업종_및_업종명.iterrows() %}
-                <option value="{{ v['업종'] }}">{{ v['업종명' ]}}</option>
-            {% endfor %}
-        </select>
-        <button type="submit">제출</button>
-    </form>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="검색..." onkeyup="searchFunction()">
+    </div>
+    <ul id="itemList">
+        {% for v in 회사_목록 %}
+        <li>{{ v["회사명"] }}</li>
+        {% endfor %}
+    </ul>
+    <script>
+        function searchFunction() {
+            const input = document.getElementById('searchInput'); // 검색창 요소
+            const filter = input.value.toUpperCase(); // 검색어를 대문자로 변환
+            const ul = document.getElementById("itemList"); // 항목 목록
+            const items = ul.getElementsByTagName('li'); // 각 항목 (li)
 
-    <!-- 사용자로부터 입력받은 후 결과 표시 -->
-    {% if result is not none %}
-        <h2>결과: {{ result }}</h2>
-    {% endif %}
-
+            // 각 항목을 순회하면서 검색어와 일치하는지 확인
+            for (let i = 0; i < items.length; i++) {
+                const item = items[i];
+                const text = item.textContent || item.innerText; // 항목 텍스트
+                if (text.toUpperCase().indexOf(filter) > -1) {
+                    item.classList.remove("hidden"); // 검색어와 일치하면 보이게
+                } else {
+                    item.classList.add("hidden"); // 일치하지 않으면 숨기기
+                }
+            }
+        }
+    </script>
 </body>
 </html>

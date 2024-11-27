@@ -8,22 +8,32 @@
   <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
 </head>
 <body>
-  <form action="/tmp2">
-    <input type="hidden" id="stock-number" name="stock-number">
-    <input type="hidden" id="company-name" name="company-name">
+  {% set 재무제표종류 = 재무제표종류 or [] %}
+  {% set 항목코드 = 항목코드 or [] %}
+  {% set 결산기준일 = 결산기준일 or [] %}
+
+  <form action="/process">
+    <input type="hidden" id="stock-number" name="stock-number" value="{{ 종목코드 }}">
+    <input type="hidden" id="company-name" name="company-name" value="{{ 회사명 }}">
+    {% for 종류 in 재무제표종류 %}
+    <input type="hidden" name="financial-statement-type" value="{{ 종류 }}">
+    {% endfor %}
+    {% for 코드 in 항목코드 %}
+    <input type="hidden" name="code" value="{{ 코드 }}">
+    {% endfor %}
 
     <table id="myTable" class="display">
         <thead>
             <tr>
                 <th>✔️</th>
-                <th>재무제표종류</th>
+                <th>{{ 데이터테이블_항목[0] }}</th>
             </tr>
         </thead>
         <tbody>
-            {% for v in 재무제표종류 %}
+            {% for v in 데이터테이블 %}
             <tr>
                 <td>
-                  <input type="checkbox" id="{{ v }}" name="financial-statement-type" value="{{ v }}">
+                  <input type="checkbox" id="{{ v }}" name="{{ 데이터테이블_항목[1] }}" value="{{ v }}">
                 </td>
                 <td>
                   <label for="{{ v }}">{{ v }}</label>
@@ -37,14 +47,6 @@
 
   <script>
     let table = new DataTable('#myTable');
-
-    const urlParams = new URLSearchParams(window.location.search);
-
-    const stockNumber = urlParams.get('stock-number');
-    const companyName = urlParams.get('company-name');
-
-    document.querySelector('#stock-number').value = stockNumber;
-    document.querySelector('#company-name').value = companyName;
   </script>
 </body>
 </html>
