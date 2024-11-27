@@ -1,12 +1,12 @@
 import os
-from flask import Flask
+from flask import Flask, request, render_template, session
 from app.main.routes import main
 from datetime import datetime
-
+import secrets
 
 app = Flask(__name__)
-today = datetime.today()
 
+today = datetime.today()
 
 # 여기에 설정, 블루프린트 등록 등 애플리케이션 초기화 작업을 추가합니다.
 app.config["년"] = today.year
@@ -19,20 +19,16 @@ app.config["종목"] = {}
 app.config["종목코드"] = {}
 
 app.register_blueprint(main)
+app.secret_key = secrets.token_hex(32)  # 세션을 사용하기 위해 필수
 
+@app.before_request
+def before_request_func():
+    if request.path == '/loading':
+        return None
 
-def 최신_파일명_가져오기(파일_목록):
-    최신_연도 = -1
-    최신_파일명 = None
-
-    for 파일 in 파일_목록:
-        연도 = int(파일.split("_")[0])
-
-        if 연도 > 최신_연도:
-            최신_연도 = 연도
-            최신_파일명 = 파일
-
-    return 최신_파일명
+    if "완전_통합본" not in app.config:
+        session['origin_path'] = request.url  # 요청한 URL을 세션에 저장
+        return render_template("loading.html")
 
 
 if __name__ == '__main__':
@@ -66,9 +62,5 @@ if __name__ == '__main__':
                     연결.append(파일명) # 파일명이 '연결'을 포함하고 txt 파일이면 연결 재무제표이므로 '연결' 리스트에 추가
                 elif 파일명.endswith(".txt"):
                     별도.append(파일명) # 파일명이 '연결'을 포함하지 않고 txt 파일이면 별도 재무제표이므로 '별도' 리스트에 추가
-
-    for k1, v1 in app.config["재무제표_목록"].items():
-        for k2, v2 in v1.items():
-            print(k2, v2, '\n')
 
     app.run(debug=True)

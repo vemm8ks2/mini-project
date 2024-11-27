@@ -1,11 +1,23 @@
 import pandas as pd
-import plotly.graph_objects as go
-from flask import Blueprint, render_template, request, current_app
+from flask import Blueprint, render_template, request, current_app, redirect, session
 
 from app.data_process.재무제표_제어 import 재무제표_가져오기
 from app.data_process.차트_생성 import 차트_생성
+from app.util.종목_가져오기 import 종목_가져오기
 
 main = Blueprint('main', __name__)
+
+
+@main.route('/loading', methods=['GET'])
+def loading_method():
+    app = current_app  # 현재 활성화된 앱에 접근
+
+    if "완전_통합본" not in app.config:
+        app.config["완전_통합본"] = 재무제표_가져오기(f"{app.config["루트_경로"]}/전체_별도-연결_완전_통합본.csv")
+
+    origin_path = session.get('origin_path', '/')
+
+    return redirect(origin_path)
 
 
 @main.route('/', methods=['GET'])
@@ -47,31 +59,10 @@ def tmp_method():
 
 @main.route('/tmp1', methods=["GET"])
 def tmp1_method():
-    app = current_app  # 현재 활성화된 앱에 접근
-
-    완전_통합본 = app.config["완전_통합본"]
-
     회사명 = request.args.get('company-name')
     종목코드 = request.args.get('stock-number')
 
-    종목 = 완전_통합본[(완전_통합본["종목코드"] == 종목코드) | (완전_통합본["회사명"] == 회사명)]
-
-    if 종목코드:
-        app.config["종목코드"][f"[{종목코드}]"] = 종목["회사명"]
-
-    if 회사명:
-        app.config["종목코드"][종목["종목코드"].iloc[-1]] = 종목["회사명"].iloc[-1]
-
-    종목.loc[:, "재무제표종류"] = 종목["재무제표종류"].str.strip()
-    종목.loc[:, "항목코드"] = 종목["항목코드"].str.strip()
-    종목.loc[:, "항목명"] = 종목["항목명"].str.strip()
-
-    종목.loc[종목["항목코드"] == "ifrs_ProfitLoss", "항목코드"] = "ifrs-full_ProfitLoss"
-    종목.loc[종목["항목코드"] == "ifrs_Revenue", "항목코드"] = "ifrs-full_Revenue"
-    종목.loc[종목["재무제표종류"] == "손익계산서, 기능별 분류 - 별도재무제표", "재무제표종류"] = "손익계산서, 기능별 분류 - 별도"
-    종목.loc[종목["재무제표종류"] == "손익계산서, 기능별 분류 - 연결재무제표", "재무제표종류"] = "손익계산서, 기능별 분류 - 연결"
-
-    app.config["종목"][회사명] = 종목 # 캐싱
+    종목 = 종목_가져오기(회사명, 종목코드)
 
     return render_template(
         "step1.html",
@@ -83,17 +74,12 @@ def tmp1_method():
 
 @main.route('/tmp2', methods=["GET"])
 def tmp2_method():
-    app = current_app  # 현재 활성화된 앱에 접근
-
     회사명 = request.args.get('company-name')
     종목코드 = request.args.get('stock-number')
     재무제표종류 = request.args.getlist('financial-statement-type')
 
-    if 종목코드:
-        회사명 = app.config["종목코드"][종목코드]
-
-    종목 = app.config["종목"][회사명]
-    종목 = 종목[종목['재무제표종류'].isin(재무제표종류)]
+    종목 = 종목_가져오기(회사명, 종목코드)
+    종목 = 종목[종목["재무제표종류"].isin(재무제표종류)]
 
     return render_template(
         'step2.html',
@@ -106,17 +92,13 @@ def tmp2_method():
 
 @main.route('/tmp3', methods=["GET"])
 def tmp3_method():
-    app = current_app  # 현재 활성화된 앱에 접근
-
     회사명 = request.args.get('company-name')
     종목코드 = request.args.get('stock-number')
     재무제표종류 = request.args.getlist('financial-statement-type')
     항목코드 = request.args.getlist('code')
 
-    if 종목코드:
-        회사명 = app.config["종목코드"][종목코드]
-
-    종목 = app.config["종목"][회사명]
+    종목 = 종목_가져오기(회사명, 종목코드)
+    종목 = 종목[종목['재무제표종류'].isin(재무제표종류)]
     종목 = 종목[종목['항목코드'].isin(항목코드)]
 
     return render_template(
@@ -124,25 +106,20 @@ def tmp3_method():
         회사명=회사명,
         종목코드=종목코드,
         재무제표종류=재무제표종류,
-        항목코드 = 항목코드,
+        항목코드=항목코드,
         결산기준일=종목["결산기준일"].drop_duplicates().tolist(),
     )
 
 
 @main.route('/tmp4', methods=["GET"])
 def tmp4_method():
-    app = current_app  # 현재 활성화된 앱에 접근
-
     회사명 = request.args.get('company-name')
     종목코드 = request.args.get('stock-number')
     재무제표종류 = request.args.getlist('financial-statement-type')
     항목코드 = request.args.getlist('code')
     결산기준일 = request.args.getlist('settlement-date')
 
-    if 종목코드:
-        회사명 = app.config["종목코드"][종목코드]
-
-    종목 = app.config["종목"][회사명]
+    종목 = 종목_가져오기(회사명, 종목코드)
     종목 = 종목[종목['재무제표종류'].isin(재무제표종류)]
     종목 = 종목[종목['항목코드'].isin(항목코드)]
     종목 = 종목[종목['결산기준일'].isin(결산기준일)]
