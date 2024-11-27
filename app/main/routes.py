@@ -3,6 +3,7 @@ import plotly.graph_objects as go
 from flask import Blueprint, render_template, request, current_app
 
 from app.data_process.재무제표_제어 import 재무제표_가져오기
+from app.data_process.차트_생성 import 차트_생성
 
 main = Blueprint('main', __name__)
 
@@ -63,6 +64,7 @@ def tmp1_method():
 
     종목.loc[:, "재무제표종류"] = 종목["재무제표종류"].str.strip()
     종목.loc[:, "항목코드"] = 종목["항목코드"].str.strip()
+    종목.loc[:, "항목명"] = 종목["항목명"].str.strip()
 
     종목.loc[종목["항목코드"] == "ifrs_ProfitLoss", "항목코드"] = "ifrs-full_ProfitLoss"
     종목.loc[종목["항목코드"] == "ifrs_Revenue", "항목코드"] = "ifrs-full_Revenue"
@@ -147,42 +149,12 @@ def tmp4_method():
 
     종목.loc[:, '당기'] = 종목['당기'].str.replace(',', '').astype('int64')
 
-
-    fig = go.Figure()
-
-    재무제표종류_목록 = 종목["재무제표종류"].unique()
-    항목코드_목록 = 종목["항목코드"].unique()
-
-    for 종류 in 재무제표종류_목록:
-        for 항목코드 in 항목코드_목록:
-            차트화 = 종목[(종목["재무제표종류"] == 종류) & (종목["항목코드"] == 항목코드)]
-
-            fig.add_trace(go.Scatter(
-                x=차트화['결산기준일'],
-                y=차트화['당기'],
-                mode='lines+markers',
-                name=차트화["항목명"].iloc[-1]
-            ))
-
-    # 레이아웃 설정
-    fig.update_layout(
-        title=f"{회사명} 연도별, 항목코드별 비교 차트",
-        xaxis_title="연도",
-        xaxis=dict(
-            tickvals=종목['결산기준일'],
-            ticktext=종목['결산기준일'],
-        ),
-        #yaxis_title="당기순이익",
-        #yaxis=dict(
-        #    tickformat=',.0f',
-        #),
-        template="simple_white"
-    )
-
-    graph_html = fig.to_html(full_html=False)
+    선_차트_HTML = 차트_생성(종목, "선")
+    막대_차트_HTML = 차트_생성(종목, "막대")
 
     return render_template(
         "step4.html",
         결과=종목.to_dict(orient="records"),
-        그래프=graph_html
+        선_그래프=선_차트_HTML,
+        막대_그래프=막대_차트_HTML
     )
