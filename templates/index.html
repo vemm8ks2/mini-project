@@ -1,96 +1,55 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flask Form Example</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.tailwindcss.css">
-    <style>
-        * {
-          font-family: "Noto Sans KR", sans-serif;
-          font-optical-sizing: auto;
-          font-style: normal;
-        }
+{% extends "data_tables_base.html" %}  <!-- 부모 템플릿을 상속 -->
 
-        form[action="/process"] {
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-        }
-    </style>
-</head>
-<body>
-    <main class="w-[1280px] m-auto min-h-screen flex justify-center items-center">
-        <form action="/process" class="p-12 shadow-md rounded-lg">
-            <input type="hidden" id="company-name" name="company-name" value="" />
+{% block main %}
+<form action="/process" class="wrapper p-12 rounded-lg w-full">
+    <input type="hidden" id="company-name" name="company-name" value="" />
 
-            <table id="myTable" class="table-fixed">
-                <thead>
-                    <tr>
-                        <th class="w-20">선택</th>
-                        <th>회사명</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for 회사 in 회사_목록 %}
-                    <tr>
-                        <td>
-                            <input
-                                type="radio"
-                                id="{{ 회사['종목코드'] }}"
-                                name="stock-number"
-                                value="{{ 회사['종목코드'] }}"
-                                class="w-full"
-                                onclick="setCompanyName('{{ 회사['회사명'] }}')"
-                            />
-                        </td>
-                        <td>
-                            <label
-                                for="{{ 회사['종목코드'] }}"
-                                class="inline-block w-full"
-                            >
-                                {{ 회사["회사명"] }}
-                            </label>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            <div class="flex justify-center">
-                <button
-                    type="submit"
-                    class="mt-4 px-48 py-2 rounded-md font-semibold bg-stone-700 text-stone-100 hover:bg-stone-900"
-                >
-                    제출
-                </button>
-            </div>
-        </form>
-    </main>
+    <table id="myTable" class="table-fixed shadow rounded-md">
+        <thead>
+            <tr>
+                <th class="w-20 text-center">선택</th>
+                <th>회사명</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for 회사 in 회사_목록 %}
+            <tr>
+                <td>
+                    <input
+                        type="radio"
+                        id="{{ 회사['종목코드'] }}"
+                        name="stock-number"
+                        value="{{ 회사['종목코드'] }}"
+                        class="w-full"
+                        onclick="setCompanyName('{{ 회사['회사명'] }}')"
+                    />
+                </td>
+                <td>
+                    <label
+                        for="{{ 회사['종목코드'] }}"
+                        class="inline-block w-full"
+                    >
+                        {{ 회사["회사명"] }}
+                    </label>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="flex justify-center">
+        <button
+            type="submit"
+            class="mt-4 px-48 py-2 rounded-md font-semibold bg-stone-700 text-stone-100 hover:bg-stone-900"
+        >
+            제출
+        </button>
+    </div>
+</form>
+{% endblock %}
 
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
-    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.tailwindcss.js"></script>
-
+{% block script %}
+    {{ super() }}
     <script>
-        new DataTable('#myTable', {
-            language: {
-                processing: "처리 중...",
-                lengthMenu: "_MENU_ 항목 보기",
-                zeroRecords: "일치하는 기록이 없습니다",
-                info: "_TOTAL_ 항목 중 _START_ - _END_ 번 항목",
-                infoEmpty: "0 항목 중 0 - 0 번 항목",
-                infoFiltered: "(_MAX_ 항목 중 필터링됨)",
-                search: "검색:",
-                paginate: {
-                    first: "처음",
-                    previous: "이전",
-                    next: "다음",
-                    last: "마지막"
-                }
-            }
-        });
         const companyNameInput = document.querySelector('#company-name');
 
         const setCompanyName = (name) => {
@@ -104,5 +63,4 @@
             }
         }
     </script>
-</body>
-</html>
+{% endblock %}

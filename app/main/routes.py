@@ -19,7 +19,7 @@ def home():
     회사_목록 = 완전_통합본.loc[:, ['종목코드', '회사명']]
     회사_목록 = 회사_목록.groupby("종목코드").last().reset_index()
 
-    return render_template('tmp.html', 회사_목록=회사_목록.to_dict("records"))
+    return render_template('index.html', 회사_목록=회사_목록.to_dict("records"))
 
 
 @main.route('/loading', methods=['GET'])
@@ -89,14 +89,14 @@ def process_method():
         막대_차트_HTML = 차트_생성(종목, "막대")
 
         return render_template(
-            "result_tmp.html",
+            "result.html",
             결과=종목.to_dict(orient="records"),
             선_그래프=선_차트_HTML,
             막대_그래프=막대_차트_HTML
         )
 
     return render_template(
-        "process_tmp.html",
+        "process.html",
         회사명=회사명,
         종목코드=종목코드,
         재무제표종류=재무제표종류,
