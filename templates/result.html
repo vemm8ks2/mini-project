@@ -15,13 +15,20 @@
         </thead>
         <tbody>
             {% for 종목 in 결과 %}
+            {% set 당기 = 종목['당기'] | replace(',', '') | int %}
             <tr class="*:truncate">
                 <td>{{ 종목['결산기준일'] }}</td>
                 <td>{{ 종목['재무제표종류'] }}</td>
                 <td>{{ 종목['항목명'] }}</td>
                 <td>{{ 종목['항목코드'] }}</td>
-                <td>{{ 종목['회사명'] }}</td>
-                <td>{{ 종목['당기'] }}</td>
+                <td class="text-center">{{ 종목['회사명'] }}</td>
+                {% if 당기 > 0 %}
+                    <td class="text-green-500 text-right">{{ 종목['당기'] }}</td>
+                {% elif 당기 < 0 %}
+                    <td class="text-red-500 text-right">{{ 종목['당기'] }}</td>
+                {% else %}
+                    <td class="text-right">{{ 종목['당기'] }}</td>
+                {% endif %}
             </tr>
             {% endfor %}
         </tbody>
