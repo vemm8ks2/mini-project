@@ -4,70 +4,102 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flask Form Example</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.tailwindcss.css">
     <style>
-        .search-container {
-            margin-bottom: 20px;
+        * {
+          font-family: "Noto Sans KR", sans-serif;
+          font-optical-sizing: auto;
+          font-style: normal;
         }
 
-        input[type="text"] {
-            padding: 10px;
-            width: 200px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        li {
-            padding: 8px;
-            margin: 5px 0;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
-        li.hidden {
-            display: none;
+        form[action="/process"] {
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
 <body>
-    <h1>Flask Form 예제</h1>
+    <main class="w-[1280px] m-auto min-h-screen flex justify-center items-center">
+        <form action="/process" class="p-12 shadow-md rounded-lg">
+            <input type="hidden" id="company-name" name="company-name" value="" />
 
-    <form action="/process">
-        <input id="stock-number" name="stock-number" />
-        <input id="company-name" name="company-name" />
-        <button type="submit">제출</button>
-    </form>
+            <table id="myTable" class="table-fixed">
+                <thead>
+                    <tr>
+                        <th class="w-20">선택</th>
+                        <th>회사명</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for 회사 in 회사_목록 %}
+                    <tr>
+                        <td>
+                            <input
+                                type="radio"
+                                id="{{ 회사['종목코드'] }}"
+                                name="stock-number"
+                                value="{{ 회사['종목코드'] }}"
+                                class="w-full"
+                                onclick="setCompanyName('{{ 회사['회사명'] }}')"
+                            />
+                        </td>
+                        <td>
+                            <label
+                                for="{{ 회사['종목코드'] }}"
+                                class="inline-block w-full"
+                            >
+                                {{ 회사["회사명"] }}
+                            </label>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="flex justify-center">
+                <button
+                    type="submit"
+                    class="mt-4 px-48 py-2 rounded-md font-semibold bg-stone-700 text-stone-100 hover:bg-stone-900"
+                >
+                    제출
+                </button>
+            </div>
+        </form>
+    </main>
 
-    <div class="search-container">
-        <input type="text" id="searchInput" placeholder="검색..." onkeyup="searchFunction()">
-    </div>
-    <ul id="itemList">
-        {% for v in 회사_목록 %}
-        <li>{{ v["회사명"] }}</li>
-        {% endfor %}
-    </ul>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.tailwindcss.js"></script>
+
     <script>
-        function searchFunction() {
-            const input = document.getElementById('searchInput'); // 검색창 요소
-            const filter = input.value.toUpperCase(); // 검색어를 대문자로 변환
-            const ul = document.getElementById("itemList"); // 항목 목록
-            const items = ul.getElementsByTagName('li'); // 각 항목 (li)
+        new DataTable('#myTable', {
+            language: {
+                processing: "처리 중...",
+                lengthMenu: "_MENU_ 항목 보기",
+                zeroRecords: "일치하는 기록이 없습니다",
+                info: "_TOTAL_ 항목 중 _START_ - _END_ 번 항목",
+                infoEmpty: "0 항목 중 0 - 0 번 항목",
+                infoFiltered: "(_MAX_ 항목 중 필터링됨)",
+                search: "검색:",
+                paginate: {
+                    first: "처음",
+                    previous: "이전",
+                    next: "다음",
+                    last: "마지막"
+                }
+            }
+        });
+        const companyNameInput = document.querySelector('#company-name');
 
-            // 각 항목을 순회하면서 검색어와 일치하는지 확인
-            for (let i = 0; i < items.length; i++) {
-                const item = items[i];
-                const text = item.textContent || item.innerText; // 항목 텍스트
-                if (text.toUpperCase().indexOf(filter) > -1) {
-                    item.classList.remove("hidden"); // 검색어와 일치하면 보이게
-                } else {
-                    item.classList.add("hidden"); // 일치하지 않으면 숨기기
+        const setCompanyName = (name) => {
+            const radioButtons = document.querySelectorAll('input[type="radio"][name="stock-number"]');
+
+            for (let i = 0; i < radioButtons.length; i++) {
+                if (radioButtons[i].checked) {
+                    companyNameInput.value = name;
+                    break;
                 }
             }
         }

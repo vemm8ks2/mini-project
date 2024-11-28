@@ -1,0 +1,39 @@
+{% extends "base.html" %}  <!-- 부모 템플릿을 상속 -->
+
+{% block style %}
+    .wrapper {
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    }
+{% endblock %}
+
+{% block content %}
+<main class="w-[1280px] m-auto min-h-screen flex justify-center items-center">
+    {% block main %}{% endblock %}
+</main>
+{% endblock %}
+
+{% block script %}
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.tailwindcss.js"></script>
+    <script>
+        new DataTable('#myTable', {
+            language: {
+                processing: "처리 중...",
+                lengthMenu: "_MENU_ 항목 보기",
+                zeroRecords: "일치하는 기록이 없습니다",
+                info: "_TOTAL_ 항목 중 _START_ - _END_ 번 항목",
+                infoEmpty: "0 항목 중 0 - 0 번 항목",
+                infoFiltered: "(_MAX_ 항목 중 필터링됨)",
+                search: "검색:",
+                paginate: {
+                    first: "처음",
+                    previous: "이전",
+                    next: "다음",
+                    last: "마지막"
+                }
+            }
+        });
+    </script>
+{% endblock %}

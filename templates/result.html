@@ -1,44 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-  <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-  <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" /> -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.material.min.css">
 </head>
 <body>
-  <table id="myTable" class="display">
-      <thead>
-          <tr>
+    <table id="myTable" class="display">
+        <thead>
+            <tr>
               <th>결산기준일</th>
               <th>재무제표종류</th>
               <th>항목명</th>
               <th>항목코드</th>
               <th>회사명</th>
               <th>당기</th>
-          </tr>
-      </thead>
-      <tbody>
-          {% for 종목 in 결과 %}
-          <tr>
-              <td>{{ 종목['결산기준일'] }}</td>
-              <td>{{ 종목['재무제표종류'] }}</td>
-              <td>{{ 종목['항목명'] }}</td>
-              <td>{{ 종목['항목코드'] }}</td>
-              <td>{{ 종목['회사명'] }}</td>
-              <td>{{ '{:,}'.format(종목['당기']) }}</td>
-          </tr>
-          {% endfor %}
-      </tbody>
-  </table>
+            </tr>
+        </thead>
+        <tbody>
+            {% for 종목 in 결과 %}
+            <tr>
+                <td>{{ 종목['결산기준일'] }}</td>
+                <td>{{ 종목['재무제표종류'] }}</td>
+                <td>{{ 종목['항목명'] }}</td>
+                <td>{{ 종목['항목코드'] }}</td>
+                <td>{{ 종목['회사명'] }}</td>
+                <td>{{ 종목['당기'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
-  {{ 선_그래프 | safe }}
+    {{ 선_그래프 | safe }}
 
-  {{ 막대_그래프 | safe }}
+    {{ 막대_그래프 | safe }}
 
-  <script>
-    let table = new DataTable('#myTable');
-  </script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+    <script>
+        let table = new DataTable('#myTable');
+    </script>
 </body>
 </html>

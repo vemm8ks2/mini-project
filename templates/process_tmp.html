@@ -1,0 +1,47 @@
+{% extends "data_tables_base.html" %}  <!-- 부모 템플릿을 상속 -->
+
+{% set 재무제표종류 = 재무제표종류 or [] %}
+{% set 항목코드 = 항목코드 or [] %}
+{% set 결산기준일 = 결산기준일 or [] %}
+
+{% block main %}
+    <form action="/process" class="wrapper p-12 rounded-lg w-full">
+        <input type="hidden" id="stock-number" name="stock-number" value="{{ 종목코드 }}">
+        <input type="hidden" id="company-name" name="company-name" value="{{ 회사명 }}">
+        {% for 종류 in 재무제표종류 %}
+        <input type="hidden" name="financial-statement-type" value="{{ 종류 }}">
+        {% endfor %}
+        {% for 코드 in 항목코드 %}
+        <input type="hidden" name="code" value="{{ 코드 }}">
+        {% endfor %}
+
+        <table id="myTable" class="table-fixed shadow rounded-md">
+            <thead>
+                <tr>
+                    <th class="w-20 text-center">선택</th>
+                    <th>{{ 데이터테이블_항목[0] }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for v in 데이터테이블 %}
+                <tr>
+                    <td>
+                      <input type="checkbox" id="{{ v }}" name="{{ 데이터테이블_항목[1] }}" value="{{ v }}" class="w-full">
+                    </td>
+                    <td>
+                      <label for="{{ v }}" class="inline-block w-full">{{ v }}</label>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="flex justify-center">
+            <button
+                type="submit"
+                class="mt-4 px-48 py-2 rounded-md font-semibold bg-stone-700 text-stone-100 hover:bg-stone-900"
+            >
+                제출
+            </button>
+        </div>
+    </form>
+{% endblock %}

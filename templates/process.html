@@ -1,18 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-  <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-  <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.material.min.css">
 </head>
 <body>
-  {% set 재무제표종류 = 재무제표종류 or [] %}
-  {% set 항목코드 = 항목코드 or [] %}
-  {% set 결산기준일 = 결산기준일 or [] %}
+    {% set 재무제표종류 = 재무제표종류 or [] %}
+    {% set 항목코드 = 항목코드 or [] %}
+    {% set 결산기준일 = 결산기준일 or [] %}
 
-  <form action="/process">
+    <form action="/process">
     <input type="hidden" id="stock-number" name="stock-number" value="{{ 종목코드 }}">
     <input type="hidden" id="company-name" name="company-name" value="{{ 회사명 }}">
     {% for 종류 in 재무제표종류 %}
@@ -43,10 +41,12 @@
         </tbody>
     </table>
     <button>제출하기</button>
-  </form>
+    </form>
 
-  <script>
-    let table = new DataTable('#myTable');
-  </script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+    <script>
+        let table = new DataTable('#myTable');
+    </script>
 </body>
 </html>

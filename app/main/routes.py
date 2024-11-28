@@ -1,6 +1,5 @@
 import os
 from flask import Blueprint, render_template, request, current_app, redirect, session
-import pandas as pd
 
 from app.data_process.완전_통합본_생성 import 완전_통합본_생성
 from app.data_process.재무제표_제어 import 재무제표_가져오기
@@ -20,7 +19,7 @@ def home():
     회사_목록 = 완전_통합본.loc[:, ['종목코드', '회사명']]
     회사_목록 = 회사_목록.groupby("종목코드").last().reset_index()
 
-    return render_template('index.html', 회사_목록=회사_목록.to_dict("records"))
+    return render_template('tmp.html', 회사_목록=회사_목록.to_dict("records"))
 
 
 @main.route('/loading', methods=['GET'])
@@ -86,20 +85,18 @@ def process_method():
     데이터테이블 = 종목[데이터테이블_항목[0]].drop_duplicates().tolist()
 
     if 재무제표종류 and 항목코드 and 결산기준일:
-        종목.loc[:, '당기'] = 종목['당기'].str.replace(',', '').astype('int64')
-
         선_차트_HTML = 차트_생성(종목, "선")
         막대_차트_HTML = 차트_생성(종목, "막대")
 
         return render_template(
-            "result.html",
+            "result_tmp.html",
             결과=종목.to_dict(orient="records"),
             선_그래프=선_차트_HTML,
             막대_그래프=막대_차트_HTML
         )
 
     return render_template(
-        "process.html",
+        "process_tmp.html",
         회사명=회사명,
         종목코드=종목코드,
         재무제표종류=재무제표종류,
