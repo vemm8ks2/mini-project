@@ -8,7 +8,7 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: #fff;
     color: white;
     display: flex;
     flex-direction: column;
@@ -27,6 +27,10 @@
     conic-gradient(#0000 30%,#A9D8E1);
   -webkit-mask: radial-gradient(farthest-side,#0000 calc(100% - 8px),#000 0);
   animation: l13 1s infinite linear;
+}
+
+.loader-text {
+  color: #000;
 }
 
 @keyframes l13{

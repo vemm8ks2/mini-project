@@ -1,16 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>데이터 불러오기</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&display=swap" rel="stylesheet">
-  <style>
+{% extends "base.html" %}  <!-- 부모 템플릿을 상속 -->
+
+{% block title %}
+  {{ super() }} | 데이터 전처리
+{% endblock %}
+
+{% block style %}
     body {
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
-      font-family: "proxima-nova-soft", sans-serif;
       -webkit-user-select: none;
       overflow: hidden;
     }
@@ -57,10 +54,8 @@
     }
 
     .loading-text {
-      font-family: "Gamja Flower", sans-serif;
-      font-weight: 400;
       font-size: 18px;
-      font-style: normal;
+      font-weight: 600;
       color: #fff;
       opacity: 0.8;
     }
@@ -138,9 +133,9 @@
         opacity: 1;
       }
     }
-  </style>
-</head>
-<body>
+{% endblock %}
+
+{% block content %}
   <div id="particles-background" class="vertical-centered-box"></div>
   <div id="particles-foreground" class="vertical-centered-box"></div>
 
@@ -156,7 +151,9 @@
   <div class="text-container">
     <p class="loading-text">데이터를 생성 및 불러오기 중 입니다. 잠시만 기다려주세요...</p>
   </div>
+{% endblock %}
 
+{% block script %}
   <script>
     /*!
      * Particleground
@@ -204,6 +201,7 @@
       particleRadius: 2, // Dot size
     });
   </script>
+
   <script>
     const form = document.createElement("form");
 
@@ -212,5 +210,4 @@
 
     form.submit();
   </script>
-</body>
-</html>
+{% endblock %}
