@@ -1,10 +1,25 @@
 {% extends "data_tables_base.html" %}  <!-- 부모 템플릿을 상속 -->
+{% import "loader_macro.html" as loader %}
+
+{% block title %}
+    {{ super() }} | 결과
+{% endblock %}
+
+{% block head %}
+    {{ super() }}
+    {{ loader.loading_css() }}
+{% endblock %}
+
+{% block script %}
+    {{ super() }}
+    {{ loader.loading_script() }}
+{% endblock %}
 
 {% block main %}
 <div class="wrapper p-12 rounded-lg w-full">
     <table id="myTable" class="table-fixed shadow rounded-md">
         <thead>
-            <tr class="*:text-center">
+            <tr class="*:text-center *:cursor-pointer">
                 <th class="w-24">결산기준일</th>
                 <th class="w-96">재무제표종류</th>
                 <th class="w-36">항목명</th>
@@ -38,6 +53,7 @@
 
 {% block content %}
     {{  super() }}
+    {{ loader.loading_html() }}
 
     <div class="w-[1280px] min-h-screen mx-auto flex flex-col gap-16 mb-24 *:w-full">
         <div class="wrapper rounded-lg overflow-hidden">

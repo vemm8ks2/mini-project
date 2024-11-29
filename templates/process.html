@@ -1,8 +1,28 @@
 {% extends "data_tables_base.html" %}  <!-- 부모 템플릿을 상속 -->
+{% import "loader_macro.html" as loader %}
 
 {% set 재무제표종류 = 재무제표종류 or [] %}
 {% set 항목코드 = 항목코드 or [] %}
 {% set 결산기준일 = 결산기준일 or [] %}
+
+{% block title %}
+    {{ super() }} | {{ 데이터테이블_항목[0] }} 선택
+{% endblock %}
+
+{% block head %}
+    {{ super() }}
+    {{ loader.loading_css() }}
+{% endblock %}
+
+{% block content %}
+    {{ super() }}
+    {{ loader.loading_html() }}
+{% endblock %}
+
+{% block script %}
+    {{ super() }}
+    {{ loader.loading_script() }}
+{% endblock %}
 
 {% block main %}
     <form action="/process" class="wrapper p-12 rounded-lg w-full">

@@ -1,0 +1,21 @@
+{% macro loading_css() %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/loader.min.css') }}">
+{% endmacro %}
+
+{% macro loading_html() %}
+<div id="loading-wrapper">
+    <div class="loader"></div>
+    <p>데이터를 불러오는 중 입니다...</p>
+</div>
+{% endmacro %}
+
+{% macro loading_script() %}
+<script>
+    window.onload = function() {
+        document.querySelector('#loading-wrapper').style.display = "none"; // 로딩 화면 숨기기
+        const wrappers = document.querySelectorAll('.wrapper').forEach(wrapper => {
+            wrapper.style.visibility = "visible";
+          })
+        };
+</script>
+{% endmacro %}

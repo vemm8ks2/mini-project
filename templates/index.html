@@ -1,4 +1,19 @@
 {% extends "data_tables_base.html" %}  <!-- 부모 템플릿을 상속 -->
+{% import "loader_macro.html" as loader %}
+
+{% block title %}
+    {{ super() }} | 회사명 선택
+{% endblock %}
+
+{% block head %}
+    {{ super() }}
+    {{ loader.loading_css() }}
+{% endblock %}
+
+{% block content %}
+    {{ super() }}
+    {{ loader.loading_html() }}
+{% endblock %}
 
 {% block main %}
 <form action="/process" class="wrapper p-12 rounded-lg w-full">
@@ -6,7 +21,7 @@
 
     <table id="myTable" class="table-fixed shadow rounded-md">
         <thead>
-            <tr>
+            <tr class="*:cursor-pointer">
                 <th class="w-20 text-center">선택</th>
                 <th>회사명</th>
             </tr>
@@ -49,6 +64,7 @@
 
 {% block script %}
     {{ super() }}
+
     <script>
         const companyNameInput = document.querySelector('#company-name');
 
@@ -63,4 +79,6 @@
             }
         }
     </script>
+
+    {{ loader.loading_script() }}
 {% endblock %}
