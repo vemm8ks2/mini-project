@@ -17,20 +17,41 @@
 
         <table id="myTable" class="table-fixed shadow rounded-md">
             <thead>
-                <tr>
+                <tr class="*:truncate *:cursor-pointer">
                     <th class="w-20 text-center">선택</th>
                     <th>{{ 데이터테이블_항목[0] }}</th>
+                    {% for 추가_열 in 데이터테이블_항목[2] %}
+                    <th>
+                        {{ 추가_열 }}
+                    </th>
+                    {% endfor %}
                 </tr>
             </thead>
             <tbody>
-                {% for v in 데이터테이블 %}
-                <tr>
+                {% for _, 행 in 데이터테이블 %}
+                <tr class="*:truncate">
                     <td>
-                      <input type="checkbox" id="{{ v }}" name="{{ 데이터테이블_항목[1] }}" value="{{ v }}" class="w-full">
+                        <input
+                            type="checkbox"
+                            id="{{ 행[데이터테이블_항목[0]] }}"
+                            name="{{ 데이터테이블_항목[1] }}"
+                            value="{{ 행[데이터테이블_항목[0]] }}"
+                            class="w-full"
+                        >
                     </td>
                     <td>
-                      <label for="{{ v }}" class="inline-block w-full">{{ v }}</label>
+                        <label
+                            for="{{ 행[데이터테이블_항목[0]] }}"
+                            class="inline-block w-full truncate"
+                        >
+                            {{ 행[데이터테이블_항목[0]] }}
+                        </label>
                     </td>
+                    {% for 추가_열 in 데이터테이블_항목[2] %}
+                    <td>
+                        {{ 행[추가_열] }}
+                    </td>
+                    {% endfor %}
                 </tr>
                 {% endfor %}
             </tbody>

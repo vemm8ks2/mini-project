@@ -13,6 +13,8 @@ def 차트_생성(종목, 유형):
             if 차트화.empty:
                 continue
 
+            차트화 = 차트화.sort_values(by="결산기준일")
+
             if 유형 == "선":
                 fig.add_trace(go.Scatter(
                     x=차트화["결산기준일"],

@@ -69,20 +69,21 @@ def process_method():
     결산기준일 = request.args.getlist('settlement-date') or None
 
     종목 = 종목_가져오기(회사명, 종목코드)
-    데이터테이블_항목 = ("재무제표종류", "financial-statement-type")
+    데이터테이블_항목 = ("재무제표종류", "financial-statement-type", [])
 
     if 재무제표종류:
         종목 = 종목[종목['재무제표종류'].isin(재무제표종류)]
-        데이터테이블_항목 = ("항목코드", "code")
+        데이터테이블_항목 = ("항목코드", "code", ["항목명"])
 
     if 항목코드:
         종목 = 종목[종목['항목코드'].isin(항목코드)]
-        데이터테이블_항목 = ("결산기준일", "settlement-date")
+        데이터테이블_항목 = ("결산기준일", "settlement-date", [])
 
     if 결산기준일:
         종목 = 종목[종목['결산기준일'].isin(결산기준일)]
 
-    데이터테이블 = 종목[데이터테이블_항목[0]].drop_duplicates().tolist()
+    데이터테이블 = 종목.groupby(데이터테이블_항목[0], as_index=False).last()
+    데이터테이블 = [(인덱스, 행.to_dict()) for 인덱스, 행 in 데이터테이블.iterrows()]
 
     if 재무제표종류 and 항목코드 and 결산기준일:
         선_차트_HTML = 차트_생성(종목, "선")
