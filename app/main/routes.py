@@ -55,7 +55,7 @@ def loading_method():
     if "완전_통합본" not in app.config:
         app.config["완전_통합본"] = 완전_통합본
 
-    origin_path = session.get('origin_path', '/')
+    origin_path = session.get('origin_path')
 
     return redirect(origin_path)
 

@@ -26,7 +26,11 @@ def before_request_func():
     if request.path == '/loading':
         return None
 
+    if request.path.startswith("/static"):
+        return None
+
     if "완전_통합본" not in app.config:
+
         session['origin_path'] = request.url  # 요청한 URL을 세션에 저장
         return render_template("loading.html")
 

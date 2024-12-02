@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Mini Project{% endblock %}</title><link rel="preconnect" href="https://fonts.googleapis.com">
+    {% block head %}{% endblock %}
     <style>
         @font-face {
             font-family: 'Noto Sans KR';
             src: url("{{ url_for('static', filename='fonts/NotoSansKR-Regular.ttf') }}") format("truetype");
-            font-weight: normal; /* Regular */
+            font-weight: 400; /* Regular */
             font-style: normal;
         }
 
@@ -26,7 +27,6 @@
 
         {% block style %}{% endblock %}
     </style>
-    {% block head %}{% endblock %}
 </head>
 <body>
     {% block content %}

@@ -4,6 +4,12 @@
   {{ super() }} | 데이터 전처리
 {% endblock %}
 
+{% block head %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dongle&display=swap" rel="stylesheet">
+{% endblock %}
+
 {% block style %}
     body {
       -webkit-font-smoothing: antialiased;
@@ -54,8 +60,9 @@
     }
 
     .loading-text {
-      font-size: 18px;
-      font-weight: 600;
+      font-family: "Dongle", sans-serif;
+      font-size: 24px;
+      font-weight: 400;
       color: #fff;
       opacity: 0.8;
     }
