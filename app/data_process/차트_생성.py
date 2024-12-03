@@ -46,4 +46,4 @@ def 차트_생성(종목, 유형):
         template="simple_white"
     )
 
-    return fig.to_html(full_html=False)
+    return fig
